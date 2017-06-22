@@ -1,0 +1,18 @@
+sudo: required
+
+services:
+ - docker
+
+script:
+  - echo "Updating Docker engine to 17.05.0"
+  - sudo service docker stop
+  - curl -fsSL https://get.docker.com/ | sudo sh
+  - docker version
+  - docker build -t ospi .
+  - >
+    if [ -n "$TRAVIS_TAG" ]; then
+      # push image
+      travis_retry timeout 5m docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+      docker tag ospi stefanscherer/ospi:$TRAVIS_TAG
+      docker push stefanscherer/ospi:$TRAVIS_TAG
+    fi
