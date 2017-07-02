@@ -5,4 +5,6 @@ WORKDIR /code
 RUN ./build.sh ospi
 FROM resin/rpi-raspbian
 COPY --from=build /code/OpenSprinkler /OpenSprinkler
+WORKDIR /data
+VOLUME /data
 CMD ["/OpenSprinkler"]
